@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.thorstenmarx.webtools.modules.ecommerce</groupId>
+	<artifactId>ecommerce-parent</artifactId>
+	<version>0.1.0</version>
+	<packaging>pom</packaging>
+	
+	<name>WebTools - eCommerce</name>
+	<inceptionYear>2018</inceptionYear>
+	<licenses>
+		<license>
+			<name>GNU General Public License v3(GPLv3)</name>
+			<url>http://www.gnu.org/licenses/gpl.txt</url>
+		</license>
+	</licenses>
+	<organization>
+		<name>Thorsten Marx</name>
+		<url>http://thorstenmarx.com</url>
+	</organization>
+	
+	<modules>
+		<module>modules/api</module>
+		<module>modules/engine</module>
+		<module>modules/module</module>
+	</modules>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>12</maven.compiler.source>
+		<maven.compiler.target>12</maven.compiler.target>
+		
+		<testng.version>7.1.0</testng.version>
+		<assertj.version>3.15.0</assertj.version>
+		<easymock.version>4.2</easymock.version>
+		<webtools.version>4.2.0</webtools.version>
+		<slf4j.version>1.7.25</slf4j.version>
+
+		<mahout.version>0.13.0</mahout.version>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			
+			<dependency>
+				<groupId>com.thorstenmarx.webtools.modules.ecommerce</groupId>
+				<artifactId>ecommerce-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thorstenmarx.webtools.modules.ecommerce</groupId>
+				<artifactId>ecommerce-engine</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.thorstenmarx.webtools.modules.ecommerce</groupId>
+				<artifactId>ecommerce-module</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.thorstenmarx.webtools</groupId>
+				<artifactId>webtools-api</artifactId>
+				<version>${webtools.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>${testng.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>${assertj.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>${easymock.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.thorstenmarx.webtools</groupId>
+			<artifactId>webtools-test</artifactId>
+			<version>${webtools.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.14</version>
+				<configuration>
+					<licenseName>gpl_v3</licenseName>
+					<verbose>false</verbose>
+					<addSvnKeyWords>false</addSvnKeyWords>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

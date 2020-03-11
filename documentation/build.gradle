@@ -1,0 +1,23 @@
+defaultTasks 'asciidoctor'
+
+buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+		mavenLocal()
+    }
+    dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+    }
+}
+
+apply plugin: 'org.asciidoctor.gradle.asciidoctor'
+apply plugin: 'java'
+
+
+
+asciidoctor {
+	logDocuments = true
+	sourceDir = file("src/main/resources")
+	backends  'html5'
+}

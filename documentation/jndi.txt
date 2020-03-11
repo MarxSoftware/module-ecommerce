@@ -1,0 +1,9 @@
+	<New id="cf" class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg><Ref refid="Server"/></Arg>  <!-- reference to Server instance -->
+		<Arg>adb/adbFactory</Arg>
+		<Arg>
+			<New class="de.marx_labs.ads.analytics.db.AnalyticsDbJNDI">
+				<Arg>data/adb</Arg>
+			</New>
+		</Arg>
+	</New>

@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="https://ajax.googleapis.com/ajax/libs/dojo/1.10.4/dojo/dojo.js"></script>
+		<script>
+			require(["dojo/on", "dojo/dom", "dojo/domReady!"],
+					function (on, dom, domStyle, mouse) {
+						var ads = dom.byId("ads");
+
+						on(ads, "click", function (evt) {
+							alert("gedrückt");
+						});
+					});
+		</script>
+	</head>
+	<body>
+		<div id="ads">
+
+			<script async="async" src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" xml:space="preserve"></script>
+			<!-- Lagerverkauf rechts responsive -->
+			<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9000370839743461" data-ad-slot="7206880887" data-ad-format="auto"></ins>
+			<script xml:space="preserve">
+		(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+
+		</div>
+	</body>
+</html>
