@@ -52,7 +52,6 @@ public class ProfileGenerator {
 		});
 	}
 	public void generate() {
-		System.out.println("generate user profile");
 		try {
 			Query.Builder queryBuilder = Query.builder()
 					.start(0).end(Long.MAX_VALUE);
@@ -68,7 +67,6 @@ public class ProfileGenerator {
 			CompletableFuture<Void> queryResult = analyticsDB.query(query, new Aggregator<Void>() {
 				@Override
 				public Void call() throws Exception {
-					System.out.println("found " + documents.size());
 					documents.forEach(ProfileGenerator.this::callCollectors);
 					return null;
 				}

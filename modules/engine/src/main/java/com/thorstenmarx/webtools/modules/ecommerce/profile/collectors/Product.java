@@ -17,12 +17,15 @@ public class Product {
 	public final int id;
 	public String year_week;
 	public int count;
+	
+	public final long timestamp;
 
-	public Product(final int id, final String year_week) {
+	public Product(final int id, final String year_week, final long timestamp) {
 		this.id = id;
 		this.year_week = year_week;
 		this.count = 1;
-	}
+		this.timestamp = timestamp;
+	}	
 
 	@Override
 	public int hashCode() {
@@ -60,9 +63,11 @@ public class Product {
 		@Override
 		public int compare(Product o1, Product o2) {
 			if (SortOrder.Ascending.equals(sortOder)) {
-				return o1.year_week.compareTo(o2.year_week);
+				return Long.compare(o1.timestamp, o2.timestamp);
+//				return o1.year_week.compareTo(o2.year_week);
 			} else {
-				return o2.year_week.compareTo(o1.year_week);
+				return Long.compare(o2.timestamp, o1.timestamp);
+//				return o2.year_week.compareTo(o1.year_week);
 			}
 			
 		}

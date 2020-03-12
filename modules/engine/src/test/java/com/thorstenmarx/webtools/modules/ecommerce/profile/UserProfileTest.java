@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**

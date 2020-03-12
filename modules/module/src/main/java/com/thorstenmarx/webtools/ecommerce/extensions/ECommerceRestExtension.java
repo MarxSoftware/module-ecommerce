@@ -97,10 +97,11 @@ public class ECommerceRestExtension extends SecureRestResourceExtension {
 		userProfile.generate();
 		System.out.println("after generate");
 		List<Product> rvProducts = recentlyViewProducts.getProducts();
+		System.out.println("products: " + rvProducts.size());
 		if (rvProducts.size() > 10) {
 			rvProducts = rvProducts.subList(0, 10);
 		}
-		rvProducts.sort(new Product.By_Date(SortOrder.Ascending));
+		rvProducts.sort(new Product.By_Date(SortOrder.Descending));
 		dto.put("recentlyViewedProducts", rvProducts);
 
 		List<Product> fpProducts = frequentlyPurchasedProducts.getProducts();

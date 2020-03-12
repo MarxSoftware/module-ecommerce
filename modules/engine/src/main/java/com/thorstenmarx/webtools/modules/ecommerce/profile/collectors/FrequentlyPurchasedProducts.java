@@ -43,13 +43,14 @@ public class FrequentlyPurchasedProducts implements Collector {
 
 	@Override
 	public void handle(final ShardDocument shardDocument) {
-		if (isOrder(shardDocument)) {
+		if (isOrder(shardDocument) && RecentlyViewedProducts.isValid(shardDocument)) {
 			System.out.println(shardDocument.document.toJSONString());
 			// c_cart_items
 			final String year_month_day = (shardDocument.document.getString(Fields.YEAR_MONTH_DAY.value()));
+			final long timestamp = (shardDocument.document.getLong(Fields._TimeStamp.value()));
 			List<Integer> productIDs = getProductIDs(shardDocument);
 			productIDs.forEach((prodID) -> {
-				final Product temp = new Product(prodID, year_month_day);
+				final Product temp = new Product(prodID, year_month_day, timestamp);
 				if (products.containsKey(prodID)) {
 					var product = products.get(prodID);
 					product.count = product.count + 1;
@@ -61,7 +62,7 @@ public class FrequentlyPurchasedProducts implements Collector {
 				}
 			});
 		} else {
-			LOGGER.error("is not a product");
+			LOGGER.error("is not a valid product");
 		}
 	}
 

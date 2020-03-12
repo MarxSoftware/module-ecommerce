@@ -52,14 +52,22 @@ public class RecentlyViewedProducts implements Collector {
 		final String event = document.document.getString(Fields.Event.value());
 		return Events.PageView.value().equalsIgnoreCase(event);
 	}
+	public static boolean isValid(final ShardDocument document) {
+		if (!document.document.containsKey(Fields._TimeStamp.value())) {
+			return false;
+		}
+		
+		return true;
+	}
 
 	@Override
 	public void handle(final ShardDocument shardDocument) {
-		if (isProduct(shardDocument) && isPageView(shardDocument)) {
+		if (isProduct(shardDocument) && isPageView(shardDocument) && isValid(shardDocument)) {
 			// c_cart_items
 			int page = Utils.getPageid(shardDocument);
 			final String year_month_day = (shardDocument.document.getString(Fields.YEAR_MONTH_DAY.value()));
-			final Product temp = new Product(page, year_month_day);
+			final long timestamp = (shardDocument.document.getLong(Fields._TimeStamp.value()));
+			final Product temp = new Product(page, year_month_day, timestamp);
 			if (products.containsKey(page)) {
 				var product = products.get(page);
 				product.count = product.count + 1;
@@ -70,7 +78,7 @@ public class RecentlyViewedProducts implements Collector {
 				products.put(page, temp);
 			}
 		} else {
-			LOGGER.error("is not a product");
+			LOGGER.debug("is not a valid product");
 		}
 	}
 }
