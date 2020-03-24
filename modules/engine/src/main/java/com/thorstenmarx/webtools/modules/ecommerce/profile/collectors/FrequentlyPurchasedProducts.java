@@ -9,6 +9,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.thorstenmarx.webtools.api.analytics.Events;
 import com.thorstenmarx.webtools.api.analytics.Fields;
 import com.thorstenmarx.webtools.api.analytics.query.ShardDocument;
+import com.thorstenmarx.webtools.modules.ecommerce.Constants;
+import com.thorstenmarx.webtools.modules.ecommerce.Utils;
 import com.thorstenmarx.webtools.modules.ecommerce.profile.Collector;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,22 +35,15 @@ public class FrequentlyPurchasedProducts implements Collector {
 		return resultProducts;
 	}
 
-	private boolean isOrder(final ShardDocument document) {
-		if (!document.document.containsKey(Fields.Event.value())) {
-			return false;
-		}
-		final String event = document.document.getString(Fields.Event.value());
-		return Events.Order.value().equalsIgnoreCase(event);
-	}
+	
 
 	@Override
 	public void handle(final ShardDocument shardDocument) {
-		if (isOrder(shardDocument) && RecentlyViewedProducts.isValid(shardDocument)) {
-			System.out.println(shardDocument.document.toJSONString());
+		if (Utils.isOrder(shardDocument) && RecentlyViewedProducts.isValid(shardDocument)) {
 			// c_cart_items
 			final String year_month_day = (shardDocument.document.getString(Fields.YEAR_MONTH_DAY.value()));
 			final long timestamp = (shardDocument.document.getLong(Fields._TimeStamp.value()));
-			List<Integer> productIDs = getProductIDs(shardDocument);
+			List<Integer> productIDs = Utils.getProductIDs(shardDocument);
 			productIDs.forEach((prodID) -> {
 				final Product temp = new Product(prodID, year_month_day, timestamp);
 				if (products.containsKey(prodID)) {
@@ -66,23 +61,5 @@ public class FrequentlyPurchasedProducts implements Collector {
 		}
 	}
 
-	public List<Integer> getProductIDs(final ShardDocument document) {
-		List<Integer> productIds = new ArrayList<>();
 
-		if (document.document.containsKey("c_order_items")) {
-			Object temp = document.document.get("c_order_items");
-			if (temp instanceof JSONArray) {
-				JSONArray productArray = (JSONArray)temp;
-				productArray.stream().map(Integer.class::cast).forEach(productIds::add);
-			} else if (temp instanceof String) {
-				productIds.add(Integer.valueOf((String)temp));
-			} else if (temp instanceof Integer) {
-				productIds.add((int)temp);
-			} else {
-				LOGGER.error("unknown type: " + temp);
-			}
-		}
-
-		return productIds;
-	}
 }

@@ -37,21 +37,7 @@ public class RecentlyViewedProducts implements Collector {
 		return resultProducts;
 	}
 
-	private boolean isProduct(final ShardDocument document) {
-		if (!document.document.containsKey(Fields.Type.value())) {
-			return false;
-		}
-		final String type = document.document.getString(Fields.Type.value());
-		return Constants.PostTypes.EasyDigitalDownloads.equalsIgnoreCase(type) 
-				|| Constants.PostTypes.WOOCommerce.equalsIgnoreCase(type);
-	}
-	private boolean isPageView(final ShardDocument document) {
-		if (!document.document.containsKey(Fields.Event.value())) {
-			return false;
-		}
-		final String event = document.document.getString(Fields.Event.value());
-		return Events.PageView.value().equalsIgnoreCase(event);
-	}
+	
 	public static boolean isValid(final ShardDocument document) {
 		if (!document.document.containsKey(Fields._TimeStamp.value())) {
 			return false;
@@ -62,7 +48,7 @@ public class RecentlyViewedProducts implements Collector {
 
 	@Override
 	public void handle(final ShardDocument shardDocument) {
-		if (isProduct(shardDocument) && isPageView(shardDocument) && isValid(shardDocument)) {
+		if (Utils.isProduct(shardDocument) && Utils.isPageView(shardDocument) && isValid(shardDocument)) {
 			// c_cart_items
 			int page = Utils.getPageid(shardDocument);
 			final String year_month_day = (shardDocument.document.getString(Fields.YEAR_MONTH_DAY.value()));

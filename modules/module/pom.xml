@@ -18,12 +18,12 @@
 		<dependency>
 			<groupId>com.thorstenmarx.webtools.modules.ecommerce</groupId>
 			<artifactId>ecommerce-engine</artifactId>
-			<exclusions>
+<!--			<exclusions>
 				<exclusion>
 					<groupId>org.apache.mahout</groupId>
 					<artifactId>mahout-mr</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions>-->
 		</dependency>
 		
 		<dependency>

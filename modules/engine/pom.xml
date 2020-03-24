@@ -59,6 +59,14 @@
 					<groupId>org.apache.solr</groupId>
 					<artifactId>solr-commons-csv</artifactId>
 				</exclusion>
+			 <exclusion>
+			  <groupId>it.unimi.dsi</groupId>
+			  <artifactId>fastutil</artifactId>
+			 </exclusion>
+			 <exclusion>
+			  <groupId>com.thoughtworks.xstream</groupId>
+			  <artifactId>xstream</artifactId>
+			 </exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>

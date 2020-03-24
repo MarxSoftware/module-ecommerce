@@ -38,12 +38,15 @@ public class ProfileGenerator {
 	private final AnalyticsDB analyticsDB;
 	
 	private final Type type;
+	
+	private final String event;
 
 	private ProfileGenerator(final Builder builder) {
 		this.collectors = builder.collectors;
 		this.id = builder.id;
 		this.analyticsDB = builder.analyticsDB;
 		this.type = builder.type;
+		this.event = builder.event;
 	}
 
 	private void callCollectors (final ShardDocument document) {
@@ -60,6 +63,9 @@ public class ProfileGenerator {
 				queryBuilder.term(Fields.UserId.value(), id);
 			} else if (Type.SHOP.equals(type)) {
 				queryBuilder.term(Fields.Site.value(), id);
+			}
+			if (event != null) {
+				queryBuilder.term(Fields.Event.value(), event);
 			}
 			
 			
@@ -90,6 +96,8 @@ public class ProfileGenerator {
 		private final String id;
 		
 		private final Type type;
+		
+		private String event;
 
 		protected Builder(final AnalyticsDB analyticsDB, final String id, final Type type) {
 			this.analyticsDB = analyticsDB;
@@ -98,6 +106,11 @@ public class ProfileGenerator {
 			this.type = type;
 		}
 
+		public Builder event (final String event) {
+			this.event = event;
+			return this;
+		}
+		
 		public Builder addCollector(final Collector collector) {
 			collectors.add(collector);
 			return this;

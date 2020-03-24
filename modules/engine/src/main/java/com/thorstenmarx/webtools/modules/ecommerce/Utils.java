@@ -5,14 +5,22 @@
  */
 package com.thorstenmarx.webtools.modules.ecommerce;
 
+import com.alibaba.fastjson.JSONArray;
+import com.thorstenmarx.webtools.api.analytics.Events;
 import com.thorstenmarx.webtools.api.analytics.Fields;
 import com.thorstenmarx.webtools.api.analytics.query.ShardDocument;
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author marx
  */
 public abstract class Utils {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(Utils.class);
 
 	public static int getPageid(final ShardDocument document) {
 		Object id = document.document.get(Fields.Page.value());
@@ -32,5 +40,50 @@ public abstract class Utils {
 			return (int) value;
 		}
 		return Integer.valueOf((String) value);
+	}
+
+	public static boolean isOrder(final ShardDocument document) {
+		if (!document.document.containsKey(Fields.Event.value())) {
+			return false;
+		}
+		final String event = document.document.getString(Fields.Event.value());
+		return Events.Order.value().equalsIgnoreCase(event);
+	}
+
+	public static boolean isProduct(final ShardDocument document) {
+		if (!document.document.containsKey(Fields.Type.value())) {
+			return false;
+		}
+		final String type = document.document.getString(Fields.Type.value());
+		return Constants.PostTypes.EasyDigitalDownloads.equalsIgnoreCase(type)
+				|| Constants.PostTypes.WOOCommerce.equalsIgnoreCase(type);
+	}
+
+	public static boolean isPageView(final ShardDocument document) {
+		if (!document.document.containsKey(Fields.Event.value())) {
+			return false;
+		}
+		final String event = document.document.getString(Fields.Event.value());
+		return Events.PageView.value().equalsIgnoreCase(event);
+	}
+
+	public static List<Integer> getProductIDs(final ShardDocument document) {
+		List<Integer> productIds = new ArrayList<>();
+
+		if (document.document.containsKey(Constants.Fields.ORDER_ITEMS)) {
+			Object temp = document.document.get(Constants.Fields.ORDER_ITEMS);
+			if (temp instanceof JSONArray) {
+				JSONArray productArray = (JSONArray) temp;
+				productArray.stream().map(Integer.class::cast).forEach(productIds::add);
+			} else if (temp instanceof String) {
+				productIds.add(Integer.valueOf((String) temp));
+			} else if (temp instanceof Integer) {
+				productIds.add((int) temp);
+			} else {
+				LOGGER.error("unknown type: " + temp);
+			}
+		}
+
+		return productIds;
 	}
 }
