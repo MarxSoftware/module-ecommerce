@@ -5,6 +5,9 @@
  */
 package com.thorstenmarx.webtools.modules.ecommerce.profile.recommendation;
 
+import com.thorstenmarx.webtools.modules.ecommerce.profile.recommendation.strategies.UserStrategy;
+import com.thorstenmarx.webtools.modules.ecommerce.profile.recommendation.strategies.ItemStrategy;
+import com.thorstenmarx.webtools.api.analytics.Fields;
 import com.thorstenmarx.webtools.api.analytics.query.ShardDocument;
 import com.thorstenmarx.webtools.modules.ecommerce.Constants;
 import com.thorstenmarx.webtools.modules.ecommerce.Utils;
@@ -15,8 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -26,11 +27,12 @@ public class RecommendationProfile implements Collector {
 
 	Map<Integer, Order> orders = new HashMap<>();
 	
-	public List<Product> products = new ArrayList<>();
-	
-	public List<Product> getRecommendations ( final int item_id, final Strategy strategy) {
-		
-		return Collections.EMPTY_LIST;
+	public List<Item> getItemRecommendations ( final int item_id) {
+		return new ItemStrategy(orders).calculate(item_id);
+	}
+
+	public List<Item> getUserRecommendations ( final String user_id) {
+		return new UserStrategy(orders).calculate(user_id);
 	}
 	
 	@Override
@@ -38,21 +40,20 @@ public class RecommendationProfile implements Collector {
 		if (!Utils.isOrder(shardDocument)) {
 			return;
 		}
-		int order_id = Utils.getInt(shardDocument.document.get(Constants.Fields.ORDER_ID));
+		final int order_id = Utils.getInt(shardDocument.document.get(Constants.Fields.ORDER_ID));
+		final String user_id = shardDocument.document.getString(Fields.UserId.value());
 		List<Integer> productIDs = Utils.getProductIDs(shardDocument);
 		
 		final Order order;
 		if (orders.containsKey(order_id)) {
 			order = orders.get(order_id);
 		} else {
-			order = new Order(order_id);
+			order = new Order(order_id, user_id);
 			orders.put(order_id, order);
 		}
 		
 		productIDs.forEach((item_id) -> {
-			if (!order.hasItem(item_id)) {
-				order.addItem(new Item(item_id));
-			}
+			order.addItem(item_id);
 		});
 	}
 	

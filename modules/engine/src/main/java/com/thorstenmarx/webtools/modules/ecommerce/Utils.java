@@ -86,4 +86,12 @@ public abstract class Utils {
 
 		return productIds;
 	}
+
+	public static double normalize(final double value, final double min, final double max) {
+//		return (value - min) / (max - min);
+		return (value) / (max);
+	}
+	public static double normalize(final double value, final double target_value) {
+		return (value) / (target_value);
+	}
 }

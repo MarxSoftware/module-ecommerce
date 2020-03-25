@@ -61,9 +61,6 @@ public class Item {
 
 	@Override
 	public String toString() {
-		return "Item{" + "id=" + id + '}';
+		return "Item{" + "id=" + id + ", count=" + count + '}';
 	}
-	
-	
-	
 }
