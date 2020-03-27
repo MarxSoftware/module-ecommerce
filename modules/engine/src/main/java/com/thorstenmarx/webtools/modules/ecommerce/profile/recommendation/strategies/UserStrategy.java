@@ -38,7 +38,7 @@ public class UserStrategy implements Strategy<String> {
 	@Override
 	public List<Item> calculate(final String user_id) {
 		if (Utils.isNullOrEmpty(user_id)) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		final Map<String, List<Item>> user_items = new HashMap<>();

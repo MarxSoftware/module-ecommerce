@@ -4,3 +4,6 @@ build/
 .nb-gradle/
 nbproject
 /modules/engine/private
+.settings
+.classpath
+.project
