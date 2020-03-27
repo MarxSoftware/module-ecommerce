@@ -30,6 +30,10 @@ public class ItemStrategy implements Strategy<Integer> {
 	@Override
 	public List<Item> calculate(final Integer item_id) {
 		
+		if (item_id == null) {
+			return Collections.EMPTY_LIST;
+		}
+		
 		final Map<Integer, Item> items = new HashMap<>();
 		
 		// found all orders containing the target item

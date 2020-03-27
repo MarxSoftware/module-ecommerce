@@ -28,6 +28,10 @@ public abstract class Utils {
 		return getInt(id);
 	}
 
+	public static boolean isNullOrEmpty (final String value) {
+		return value == null || value.equals("");
+	}
+	
 	public static long getLong(final Object value) {
 		if (value instanceof Long) {
 			return (long) value;
@@ -74,7 +78,14 @@ public abstract class Utils {
 			Object temp = document.document.get(Constants.Fields.ORDER_ITEMS);
 			if (temp instanceof JSONArray) {
 				JSONArray productArray = (JSONArray) temp;
-				productArray.stream().map(Integer.class::cast).forEach(productIds::add);
+//				productArray.stream().map(Integer.class::cast).forEach(productIds::add);
+				productArray.forEach((obj) -> {
+					if (obj instanceof String) {
+						productIds.add(Integer.valueOf((String) obj));
+					} else if (obj instanceof Integer) {
+						productIds.add((int) temp);
+					}
+				});
 			} else if (temp instanceof String) {
 				productIds.add(Integer.valueOf((String) temp));
 			} else if (temp instanceof Integer) {

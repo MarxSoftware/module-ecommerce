@@ -16,14 +16,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.OptionalDouble;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.impl.block.factory.Comparators;
-import org.eclipse.collections.impl.factory.Lists;
 
 /**
  *
@@ -41,6 +37,9 @@ public class UserStrategy implements Strategy<String> {
 
 	@Override
 	public List<Item> calculate(final String user_id) {
+		if (Utils.isNullOrEmpty(user_id)) {
+			return Collections.EMPTY_LIST;
+		}
 
 		final Map<String, List<Item>> user_items = new HashMap<>();
 		final MutableMap<String, Rating> user_rating;

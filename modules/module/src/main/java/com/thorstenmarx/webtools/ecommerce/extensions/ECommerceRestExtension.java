@@ -113,4 +113,11 @@ public class ECommerceRestExtension extends SecureRestResourceExtension {
 
 		return dto;
 	}
+	
+	@Path("/recommendations")
+	public RecommendationResources recommendations() {
+		return new RecommendationResources(analyticsDB);
+	}
+	
+	
 }
