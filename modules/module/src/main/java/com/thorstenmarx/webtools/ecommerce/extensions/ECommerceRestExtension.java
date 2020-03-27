@@ -10,6 +10,7 @@ import com.thorstenmarx.webtools.api.analytics.AnalyticsDB;
 import com.thorstenmarx.webtools.api.cache.CacheLayer;
 import com.thorstenmarx.webtools.api.extensions.SecureRestResourceExtension;
 import com.thorstenmarx.webtools.modules.ecommerce.SortOrder;
+import com.thorstenmarx.webtools.modules.ecommerce.Utils;
 import com.thorstenmarx.webtools.modules.ecommerce.profile.ProfileGenerator;
 import com.thorstenmarx.webtools.modules.ecommerce.profile.collectors.FrequentlyPurchasedProducts;
 import com.thorstenmarx.webtools.modules.ecommerce.profile.collectors.Product;
@@ -38,54 +39,75 @@ public class ECommerceRestExtension extends SecureRestResourceExtension {
 	@Inject
 	private CacheLayer cacheLayer;
 
+	private static String user_profile = "userprofile";
+	private static String shop_profile = "shopprpfile";
+
 	@Override
 	public void init() {
 	}
 
-	private String key (final String prefix, final String site) {
+	private String key(final String prefix, final String site) {
 		return String.format("ecommerce-%s-%s", prefix, site);
 	}
-	
+
 	@GET
 	@Path("/shopprofile")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ProfileDTO shopprofile (@QueryParam("site") final String siteid) {
+	public ProfileDTO shopprofile(@QueryParam("site") final String site) {
+
+		final ProfileDTO dto = new ProfileDTO();
+		if (Utils.isNullOrEmpty(site)) {
+			dto.put("error", true);
+			dto.put("message", "missing required parameters");
+			return dto;
+		}
 		
-		if (cacheLayer.exists(key("shopprofile", siteid))){
-			Optional<ProfileDTO> cacheValue = cacheLayer.get(key("shopprofile", siteid),  ProfileDTO.class);
-			if (cacheValue.isPresent()){
+		if (cacheLayer.exists(key(shop_profile, site))) {
+			Optional<ProfileDTO> cacheValue = cacheLayer.get(key(shop_profile, site), ProfileDTO.class);
+			if (cacheValue.isPresent()) {
 				return cacheValue.get();
 			}
 		}
-		
+
 		var frequentlyPurchasedProducts = new FrequentlyPurchasedProducts();
-		ProfileGenerator profileGenerator = ProfileGenerator.builder(analyticsDB, siteid, ProfileGenerator.Type.SHOP)
+		ProfileGenerator profileGenerator = ProfileGenerator.builder(analyticsDB, site, ProfileGenerator.Type.SHOP)
 				.addCollector(frequentlyPurchasedProducts)
 				.build();
-		
+
 		profileGenerator.generate();
-		
-		ProfileDTO profileDto = new ProfileDTO();
-		
+
 		List<Product> products = frequentlyPurchasedProducts.getProducts();
 		if (products.size() > 10) {
 			products = products.subList(0, 10);
 		}
 		products.sort(new Product.By_Count(SortOrder.Descending));
-		
-		profileDto.put("popularProducts", products);
-		
-		cacheLayer.add(key("shopprofile", siteid), profileDto, 30, TimeUnit.SECONDS);
-		
-		return profileDto;
+
+		dto.put("popularProducts", products);
+
+		cacheLayer.add(key(shop_profile, site), dto, 10, TimeUnit.SECONDS);
+
+		return dto;
 	}
-	
+
 	@GET
 	@Path("/userprofile")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ProfileDTO userprofile(@QueryParam("userid") final String userid) {
-		System.out.println("get the userprofile for " + userid);
+
 		final ProfileDTO dto = new ProfileDTO();
+		if (Utils.isNullOrEmpty(userid)) {
+			dto.put("error", true);
+			dto.put("message", "missing required parameters");
+			return dto;
+		}
+		
+		if (cacheLayer.exists(key(user_profile, userid))) {
+			Optional<ProfileDTO> cacheValue = cacheLayer.get(key(user_profile, userid), ProfileDTO.class);
+			if (cacheValue.isPresent()) {
+				return cacheValue.get();
+			}
+		}
+
 
 		var recentlyViewProducts = new RecentlyViewedProducts();
 		var frequentlyPurchasedProducts = new FrequentlyPurchasedProducts();
@@ -111,13 +133,14 @@ public class ECommerceRestExtension extends SecureRestResourceExtension {
 		fpProducts.sort(new Product.By_Count(SortOrder.Descending));
 		dto.put("frequentlyPurchasedProducts", new ArrayList<>(fpProducts));
 
+		cacheLayer.add(key(user_profile, userid), dto, 10, TimeUnit.SECONDS);
+
 		return dto;
 	}
-	
+
 	@Path("/recommendations")
 	public RecommendationResources recommendations() {
-		return new RecommendationResources(analyticsDB);
+		return new RecommendationResources(analyticsDB, cacheLayer);
 	}
-	
-	
+
 }
