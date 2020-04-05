@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thorstenmarx.webtools.ecommerce.extensions;
+package com.thorstenmarx.webtools.ecommerce.extensions.rest;
 
 import com.thorstenmarx.webtools.api.analytics.AnalyticsDB;
 import com.thorstenmarx.webtools.api.analytics.Events;
 import com.thorstenmarx.webtools.api.cache.CacheLayer;
+import com.thorstenmarx.webtools.ecommerce.extensions.ProfileDTO;
 import com.thorstenmarx.webtools.modules.ecommerce.Utils;
 import com.thorstenmarx.webtools.modules.ecommerce.profile.ProfileGenerator;
-import com.thorstenmarx.webtools.modules.ecommerce.profile.collectors.FrequentlyPurchasedProducts;
 import com.thorstenmarx.webtools.modules.ecommerce.profile.collectors.Product;
 import com.thorstenmarx.webtools.modules.ecommerce.profile.recommendation.Item;
 import com.thorstenmarx.webtools.modules.ecommerce.profile.recommendation.RecommendationProfile;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -49,7 +50,7 @@ public class RecommendationResources {
 	@GET
 	@Path("/bought_together")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ProfileDTO recommendation_bought_together(@QueryParam("site") final String site, @QueryParam("product") final Integer product_id) {
+	public ProfileDTO recommendation_bought_together(@QueryParam("site") final String site, @QueryParam("product") final Integer product_id, @QueryParam("count") @DefaultValue("10") int count) {
 		
 		final ProfileDTO dto = new ProfileDTO();
 		if (Utils.isNullOrEmpty(site) || product_id == null) {
@@ -80,8 +81,8 @@ public class RecommendationResources {
 		List<Product> recommendations = new ArrayList<>();
 		itemRecommendations.stream().map(RecommendationResources::itemToProduct).forEach(recommendations::add);
 		
-		if (recommendations.size() > 10) {
-			recommendations = recommendations.subList(0, 10);
+		if (recommendations.size() > count) {
+			recommendations = recommendations.subList(0, count);
 		}
 		dto.put("bought_together", recommendations);
 		
@@ -94,7 +95,7 @@ public class RecommendationResources {
 	@GET
 	@Path("/similar_users")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ProfileDTO similar_users(@QueryParam("site") final String site, @QueryParam("user") final String user) {
+	public ProfileDTO similar_users(@QueryParam("site") final String site, @QueryParam("user") final String user, @QueryParam("count") @DefaultValue("10") int count) {
 		
 		final ProfileDTO dto = new ProfileDTO();
 		if (Utils.isNullOrEmpty(site) || Utils.isNullOrEmpty(user)) {
@@ -126,8 +127,8 @@ public class RecommendationResources {
 		List<Product> recommendations = new ArrayList<>();
 		itemRecommendations.stream().map(RecommendationResources::itemToProduct).forEach(recommendations::add);
 		
-		if (recommendations.size() > 10) {
-			recommendations = recommendations.subList(0, 10);
+		if (recommendations.size() > count) {
+			recommendations = recommendations.subList(0, count);
 		}
 		dto.put("similar_users", recommendations);
 		
