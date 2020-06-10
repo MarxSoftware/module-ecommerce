@@ -57,7 +57,7 @@ public class FrequentlyPurchasedProducts implements Collector {
 				}
 			});
 		} else {
-			LOGGER.error("is not a valid product");
+			LOGGER.debug("is not a valid product");
 		}
 	}
 
