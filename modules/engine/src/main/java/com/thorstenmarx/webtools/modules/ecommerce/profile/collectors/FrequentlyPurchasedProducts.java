@@ -20,6 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 
+ * Produkte, die ein Nutzer schon häufiger gekauft hat oder die in einem Shop häufig gekauft werden
+ * 
+ * Frequently -> User
+ * Popular -> Shop
  *
  * @author marx
  */

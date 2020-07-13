@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 
+ * Produkte, die sich der Benutzer in der letzten Zeit angesehen hat
  *
  * @author marx
  */
