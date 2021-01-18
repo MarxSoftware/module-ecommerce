@@ -29,5 +29,8 @@ public abstract class Constants {
 		public static final String ORDER_COUPONS_USED = "c_order_coupons_used";
 		public static final String CART_ID = "c_cart_id";
 		public static final String CART_ITEMS = "c_cart_items";
+		
+		public static final String ECOM_CATEGORIES_PATH = "ecom_categories_path";
+		public static final String ECOM_CATEGORIES = "c_ecom_categories";
 	}
 }

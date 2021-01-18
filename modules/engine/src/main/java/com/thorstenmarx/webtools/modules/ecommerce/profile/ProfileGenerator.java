@@ -40,6 +40,7 @@ public class ProfileGenerator {
 	private final Type type;
 	
 	private final String event;
+	private final String category;
 
 	private ProfileGenerator(final Builder builder) {
 		this.collectors = builder.collectors;
@@ -47,6 +48,7 @@ public class ProfileGenerator {
 		this.analyticsDB = builder.analyticsDB;
 		this.type = builder.type;
 		this.event = builder.event;
+		this.category = builder.category;
 	}
 
 	private void callCollectors (final ShardDocument document) {
@@ -66,6 +68,9 @@ public class ProfileGenerator {
 			}
 			if (event != null) {
 				queryBuilder.term(Fields.Event.value(), event);
+			}
+			if (category != null) {
+				queryBuilder.term(Constants.Fields.ECOM_CATEGORIES, category);
 			}
 			
 			
@@ -98,6 +103,8 @@ public class ProfileGenerator {
 		private final Type type;
 		
 		private String event;
+		
+		private String category;
 
 		protected Builder(final AnalyticsDB analyticsDB, final String id, final Type type) {
 			this.analyticsDB = analyticsDB;
@@ -118,6 +125,11 @@ public class ProfileGenerator {
 
 		public ProfileGenerator build() {
 			return new ProfileGenerator(this);
+		}
+
+		public Builder category(final String category) {
+			this.category = category;
+			return this;
 		}
 	}
 }

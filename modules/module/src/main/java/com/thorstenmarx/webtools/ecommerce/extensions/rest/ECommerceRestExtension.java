@@ -41,8 +41,8 @@ public class ECommerceRestExtension extends SecureRestResourceExtension {
 	@Inject
 	private CacheLayer cacheLayer;
 
-	private static String user_profile = "userprofile";
-	private static String shop_profile = "shopprpfile";
+	private static final String user_profile = "userprofile";
+	private static final String shop_profile = "shopprpfile";
 
 	@Override
 	public void init() {
@@ -55,7 +55,7 @@ public class ECommerceRestExtension extends SecureRestResourceExtension {
 	@GET
 	@Path("/shopprofile")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ProfileDTO shopprofile(@QueryParam("site") final String site, @QueryParam("count") @DefaultValue("10") int count) {
+	public ProfileDTO shopprofile(@QueryParam("site") final String site, @QueryParam("category") @DefaultValue("NONE") String category, @QueryParam("count") @DefaultValue("10") int count) {
 
 		final ProfileDTO dto = new ProfileDTO();
 		if (Utils.isNullOrEmpty(site)) {
@@ -72,8 +72,12 @@ public class ECommerceRestExtension extends SecureRestResourceExtension {
 		}
 
 		var frequentlyPurchasedProducts = new FrequentlyPurchasedProducts();
-		ProfileGenerator profileGenerator = ProfileGenerator.builder(analyticsDB, site, ProfileGenerator.Type.SHOP)
-				.addCollector(frequentlyPurchasedProducts)
+		final ProfileGenerator.Builder profileGeneratorBuilder = ProfileGenerator.builder(analyticsDB, site, ProfileGenerator.Type.SHOP)
+				.addCollector(frequentlyPurchasedProducts);
+		if (!"NONE".equals("category")) {
+			profileGeneratorBuilder.category(category);
+		}
+		ProfileGenerator profileGenerator = profileGeneratorBuilder
 				.build();
 
 		profileGenerator.generate();

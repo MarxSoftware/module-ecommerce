@@ -1,32 +1,31 @@
 https://dzone.com/articles/recommendation-engine-models
 
 
-1. User based recomendation
-"Similar users also bought" - recommendation.
-1.1 Config
-	ID		= user_rec
-	EVENT	= order
-	USERID	= userid
-	ITEMID	= c_order_items
-	TYPE	= user
+1. Daten
+========
 
-2. Item based recomendation
-"Items often bought together" - recommendation.
-2.1 Config
-	ID		= item_rec
-	EVENT	= order
-	USERID	= c_order_id
-	ITEMID	= c_order_items
-	TYPE	= item
+2. Zugriff auf Daten
+====================
+* Was wurde im Shop gerade gekauft
+* Was wurde in einer Kategorie(mit Kind-Kategorien) gerade gekauft
+* Welche Produkte schauen sich ander Kunden gerade an, bzw. haben sie in ihren Einkaufskörben
 
-3. Testdata
-uid1 => item1, item2, item3
-uid2 => item1, item2, item3
-udi3 => item1, item3, item4
-udi4 => item1, item3, item4
-udi4 => item1, item3
+Bestseller
+----------
+* Was wird im Shop regelmäßig gekauft
+* Was wird in einer Kategorie (mit Kind-Kategorien) 
 
-http://localhost:8080/rest/extension?extension=recommendation-module&recommendation=user_rec&id=uid5&apikey=qi1khg1btjdqknl8ne47einbbb
-=> item4, item2
-http://localhost:8080/rest/extension?extension=recommendation-module&recommendation=item_rec&id=item1&apikey=qi1khg1btjdqknl8ne47einbbb
-=> item4, item3, item2
+Bestseller Kunde
+----------------
+* was kauft ein Kunde regelmäßig im shop
+* was kauft ein Kunde regelmäßig in einer Kategorie (mit Kind-Kategorien)
+* welche Produkte passen zu den Produkten, die der Kunde gerade im Warenkorb hat
+* welche Produkte hatte der Kunde im Warenkorb und hat sie wieder entfernt
+
+Ähnliche Kunden
+---------------
+* Andere Kunden haben auch das Produkt gekauft
+
+Ähnliche Produkte
+-----------------
+* Produkte, die häufig zusammen gekauft werden
